@@ -1,0 +1,23 @@
+# Default configuration of the LeapGNN-derived cache server.
+# DistEA itself starts the server with conf/distea.yaml (see src/dist_halo_sync.py);
+# this file is only read when the binary is started without --config.
+
+# Network interface
+rpcport: 18112
+
+# Debug output
+debug: false
+
+# Dataset (LeapGNN feature-cache mode only)
+dataset: ""
+
+# Cache type
+cache_type: "static"
+# Comma-separated addresses of all cache servers, in rank order.
+cache_group: "127.0.0.1"
+
+# Whether to record the hit rate
+statistic: false
+# Whether features are split across several files
+multi_feat_file: false
+partition_type: "metis"

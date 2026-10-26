@@ -1,0 +1,21 @@
+# Package versions of the environment that produced the results of the thesis
+# (Python 3.12, CUDA 12.8). For a conda environment:
+#
+#   make conda-env          # or, by hand:
+#   conda create -n distea python=3.12 -y && conda activate distea
+#   pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+#   pip install -r requirements.txt
+#   make nxmetis PIP=pip    # builds networkx-metis from source
+#
+# Pick the PyTorch index URL that matches your CUDA driver (cu126, cu128, ...).
+# The uv workflow (`make install`) resolves newer versions from uv.lock instead.
+torch==2.8.0
+numpy==2.4.6
+scipy==1.17.1
+networkx==3.6.1
+pymetis==2025.2.2
+tqdm==4.67.3
+decorator==5.3.1
+six==1.17.0
+grpcio==1.80.0
+protobuf==6.33.6

@@ -1,0 +1,61 @@
+# DistEA gRPC cache server configuration
+# Use this instead of static_cache.yaml when running in DistEA mode.
+#
+# CLI flags override all values here.  Minimal single-host 4-rank example:
+#
+#   Rank 0:
+#     ./distea_server \
+#       --config cache_server/conf/distea.yaml \
+#       --partition_dir outputs/partitions/EN_DE_15K_V1/721_5fold_1/dist_True/4_metis_kg2locality \
+#       --emb_dir outputs/embedding_cache \
+#       --cachegroup "127.0.0.1:18112,127.0.0.1:18113,127.0.0.1:18114,127.0.0.1:18115" \
+#       --rpcport 18112 --distea_rank 0 \
+#       --bind_addr 0.0.0.0 \
+#       --ready_file outputs/embedding_cache/ready_0.txt
+#
+#   Ranks 1-3: change --rpcport and --distea_rank accordingly.
+
+# gRPC port this server listens to on
+rpc_port: 18112
+
+# Cache implementation type ("static" is the only type used by DistEA)
+cache_type: "static"
+
+# Comma-separated "host:port" addresses for all ranks (order = rank index).
+# Single-host dev uses "127.0.0.1:18112,127.0.0.1:18113,...".
+# Docker multi-node uses real container IPs without ports
+# (port comes from rpc_port).
+cache_group: "127.0.0.1:18112"
+
+# ── DistEA-specific fields ────────────────────────────────────────────────────
+
+# Directory that contains {rank}.npy partition files (output of partition.py).
+# Example: outputs/partitions/EN_DE_15K_V1/721_5fold_1/dist_True/4_metis_kg2locality
+partition_dir: ""
+
+# Directory that contains emb_{rank}.npy embedding files (output of
+# leapgnn_cache.push() / framework.py).
+# Example: outputs/embedding_cache
+emb_dir: ""
+
+# Explicit rank index for this server process.
+# -1 = auto-detect from local IP (legacy behavior, works on multi-host Docker).
+# >=0 = explicit rank (required for single-host multi-process dev).
+dist_rank: -1
+
+# Bind address for gRPC listener.
+# "" = auto-detect local IP (legacy); "0.0.0.0" = all interfaces (recommended
+# for single-host dev so each rank's port is reachable on loopback).
+bind_addr: "0.0.0.0"
+
+# File path to create once the server is fully initialized.
+# Python GrpcHaloSync.start() watches this file to know the server is ready.
+# "" falls back to "server_done.txt" in the working directory.
+ready_file: ""
+
+# ── Legacy fields (unused in DistEA mode, kept for reference) ────────────────
+debug: false
+dataset: ""
+statistic: false
+multi_feat_file: false
+partition_type: "metis"
